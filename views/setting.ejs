@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Setting</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="./stylesheets/screen.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+	<div class="topmenu">
+		<div class="user-title">
+			<a href="/userpage">
+				<%= user.username %>
+			</a>
+		</div>
+		<div class = "nav-block-userpage">
+			<ul class="nav-userpage">
+				<li type="button"  data-toggle="modal" data-target="#myModalNews" id = "loadNews"><span class="glyphicon glyphicon-send" aria-hidden="true"></span>Notifications</li>
+				<li type="button"  data-toggle="modal" data-target="#myModal" id = "loadDialogs"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Messages</li>
+			</ul>
+		</div>
+		<div class = "form-searchPerson-block">
+			<form>
+				<input type="text" name="searchPerson" placeholder="Person" >
+				<button id = "findPerson"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+			</form>
+		</div>
+		<div class = "nav-menu-dropdown-setting">
+		<div>
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+			<ul>
+				<li><a id = "signOut" href = "/">Sign Out</a></li>
+				<li><a href="/setting">Setting</a></li>
+			</ul>
+		</div>
+		
+		</div>
+	</div>
+
+	<div class="wrapper-set">	
+		
+		<div class = "wrapper-right-set">
+			<form id = "formSetting">
+				<div class = "title-set first-title-set">Your personal information</div>
+				<input type="text" name = "describe" placeholder = "Your page about">
+				<input type="text" name="location" placeholder = "Your location">
+				<button type = "submit" id = "saveForm"  class="btn btn-primary">Save</button>
+				<input type="text" name="tag" placeholder = "The tag of your search">
+			</form>
+			<div id="regomendation">
+				<div class = title-set>Your page tags</div>
+				<button id = "bowntags" class="btn btn-primary">Add my tag</button>
+				<input type="text" id="owntages" placeholder = "Your tags">
+			</div>
+			<form enctype="multipart/form-data" method="POST" action="/uploads" id ="formAvatar">	
+				<div class = title-set>Your avatar</div>
+				<input type="file" id = "uploadFile" name = "uploadFile" accept="image/*" required/>
+				<button id="uploadAvatar" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+
+			<form enctype="multipart/form-data" method="POST" action="/uploads/bg" id = "formBg">	
+				<div class = title-set>Your background</div>
+				<input type="file" id = "uploadFileBg"  name = "uploadFileBg" accept="image/*" required/>
+				<button id="uploadAvatarBg" type="submit" class="btn btn-primary">Submit</button>
+			</form>
+		</div>
+		<div class="wrapper-left-set">
+			<div class="title-set">
+					Your can change information about your site here!
+			</div>
+			<div class="wrapper-location-set set">
+				<div>Your location is</div>
+				<%= user.location %>
+			</div>
+			<div class="wrapper-decribe-set set">
+				<div>Your page about of</div>
+				<%= user.describe %>
+			</div>
+			<div class="wrapper-avatar-set set ">
+				<div>Your Avatar is</div>
+				<img src="..\<%= user.pathAvatar %>">
+			</div>	
+			<div class="wrapper-bg-set set">
+				<div>Your Background is</div>
+				<img src="..\<%= user.pathBg %>">
+			</div>	
+			<div class="wrapper-bg-tag set">
+				<div>Your interest is:</div>
+				<%= user.tag %>
+			</div>	
+			<div class="wrapper-bg-tag-page set">
+				<div>Your page about</div>
+				<% for(var i = 0; i < user.owntags.length; i++){%>
+				<%= user.owntags[i].owntag%>
+				<% } %>
+			</div>	
+		</div>
+	</div>
+
+	<div class="modal fade" id="myModalNews" tabindex="-1" role="new" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">Dialogs</h4>
+				</div>
+			<div class="modal-body">
+				<ul class="nav nav-tabs" role="tablist">
+					<li role="presentation" class="active"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
+					<li role="presentation"><a href="#likes" aria-controls="likes" role="tab" data-toggle="tab">Likes</a></li>
+					<li role="presentation"><a href="#posts" aria-controls="posts" role="tab" data-toggle="tab">Posts</a></li>
+				</ul>
+
+
+				<div id="templateNewsWrapper">
+					<div> 
+						<div class="img-wrapper-news" img-wrapper-news>
+							<img src="" alt="" img-href >
+						</div>
+						<div class="username-wapper-news" username-wapper-news>
+							<a href="" a-href></a>
+						</div>
+						<div class="date-wrapper-news" date-wrapper-news> </div>
+						<div class="text-wrapper-text" text-wrapper-text> </div>
+					</div>  
+				</div>
+				<div class="tab-content">
+
+					<div role="tabpanel" class="tab-pane active" id="comments">
+						<div id="wrapperNewsComments"></div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="likes">
+						<div id="wrapperNewsLikes"> </div>
+					</div>
+					<div role="tabpanel" class="tab-pane" id="posts">
+						<div id="wrapperNewsPosts"> </div>
+					</div>
+				</div>
+
+				<div id="templateComments" style = "display:none">
+					<div class="wrapper-comment">
+						<div comment-id post-id class="delete">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</div>
+						<div class="author"><a href></a></div>
+						<div class="data-block-comment"></div>
+						<div class="text-comment-wrapper"></div>
+						<div comment-id post-id class="likes">
+							<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+						</div>
+					</div>
+				</div>
+
+				<div id="templateLoadPost" style = "display:none">
+					<div class="wrapper-post">
+						<div class="block-wrapper-content">
+							<div class="wrapper-img-post">
+								<img img-post-load>
+							</div>
+							<div data-id class="deletePost">
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							</div>
+							<div class="author">
+								<a href=""></a>
+							</div>
+							<div class="data-block-comment">
+
+							</div>
+							<div class="text-post">
+
+							</div>
+
+							<div class="post-img-content">
+								<img src="">
+							</div>
+
+							<div post-id class="likesPost">
+								<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+							0
+							</div>
+
+
+							<div class="wrapper-comment-form">
+							<input type="text" id="comment" placeholder="Comment">
+							<button id="SernComment" post-id>
+								<span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span>
+							</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div id="NewsWrapper">
+					<div id = "templateNews" style = "display:none">
+						<div>
+							<img src="" avatar>
+							<a href = "" lastMessege></a>
+							<div textMsg></div>
+						</div>
+					</div>
+				</div>
+			</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+			</div>
+			</div>
+			<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="myModalLabel">News</h4>
+						</div>
+						<div class="modal-body">
+
+							<div id="dialogWrapper">
+								<div id = "templateDialog" style = "display:none">
+									<div>
+										<img src="" avatar>
+										<a href = "" lastMessege></a>
+										<div textMsg></div>
+										<div dateMsg></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id = "saveFormResult" class="alert alert-success" role="alert" style = "display:none"></div>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	 <script src="./client.js"></script>
+	<script type="text/javascript" src = "./clientForm.js"></script>
+</body>
+</html>

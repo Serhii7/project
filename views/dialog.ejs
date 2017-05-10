@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Posts</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" type="text/css" href="../stylesheets/screen.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+	<div class="topmenu">
+		<div class="user-title">
+			<a href="/userpage">
+				<%= tokenObg.q %>
+			</a>
+		</div>
+		<div class = "nav-block-userpage">
+			<ul class="nav-userpage">
+				<li type="button"  data-toggle="modal" data-target="#myModalNews" id = "loadNews"><span class="glyphicon glyphicon-send" aria-hidden="true"></span>Notifications</li>
+				<li type="button"  data-toggle="modal" data-target="#myModal" id = "loadDialogs"><span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>Messages</li>
+			</ul>
+		</div>
+		<div class = "form-searchPerson-block">
+			<form>
+				<input type="text" name="searchPerson" placeholder="Person" >
+				<button id = "findPerson" data-toggle="modal" data-target="#modelSearch">
+					<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+				</button>
+			</form>
+		</div>
+		<div class = "nav-menu-dropdown-setting">
+			<div>
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				<ul>
+					<li><a id = "signOut" href = "/">Sign Out</a></li>
+					<li><a href="/setting">Setting</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class = "bg-userpage">	
+		<img src="../<%= pathBg %>">
+	</div>
+
+	<div class="wrapper-userpage">
+	<div class="left-inform-user">
+		<div class = "left-inform-user-top">	
+			<div class="wrapper-img-avatar">
+			<% if(!path){%>
+					<img src="../uploads/noavatar.jpg">	
+			<% } else {%>
+				<img src="../<%= path %>">
+			<% } %>
+			</div>
+			<div class="wrapper-username">
+				<%= users.username %>
+			</div>
+			<div class="wrapper-location">	
+				<span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span>
+				<% if(!users.location){%>
+						Set<a href = "../setting"> here</a>
+				<% } %>
+				<%= users.location %>
+			</div>
+			<div class="wrapper-desript">	
+				<%= users.describe %>
+			</div>
+			<div class="wrapper-date">	
+				<span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+				<%= users.created_at %>
+			</div>
+			<div class="wrapper-follow-length">	
+				<span>I read :</span>
+				<%= users.follow.length %>
+			</div>
+			<div class="wrapper-follower-length">
+				<span>Followers : </span>	
+				<%= users.follower.length %>
+			</div>
+		</div>	
+		<div class = "left-inform-user-bottom">	
+		<div class="title-block-recom">
+			We recommend
+		</div>
+		<% if(recom.length == 0){%>
+				<div>Set your tag<a href = "../setting"> here</a></div>
+		<% } %>
+			<% for(var i = 0; i < recom.length; i++){ %>
+			<div class="wrapper-recom-item">
+			<div class="wrapper-img-btn">
+			<% if(!recom[i].pathAvatar){%>
+					<img src="../uploads/noavatar.jpg">	
+			<% } else {%>
+				<img src="..\<%= recom[i].pathAvatar %>">
+			<% } %>
+			</div>
+			<div class = "wrapper-left-infor-recom">
+				<div class="wrapper-username">
+				<a href="/userpage/<%= recom[i].username %>">
+					<%= recom[i].username %>
+				</a>
+				</div>
+				<div class="usersub">	
+					<%= recom[i].describe %>
+				</div>
+			</div>
+			</div>
+			<% } %>
+		</div>
+	</div>
+	<div class="right-wrapper-content">	
+		<div class="title-block-recom">
+			You follow
+			<span data-toggle="modal" data-target="#modalViewAll" id = "showFollow">View all</span>
+		</div>
+			<% if(follows.length == 0){%>
+				<div>You don`t have following</div>
+			<% } %>
+			<% for(var i = 0; i < follows.length; i++) {%>
+				<div class="wrapper-recom-item">
+					<div class="wrapper-img-btn">
+						<% if(!follows[i].pathAvatar){%>
+								<img src="../uploads/noavatar.jpg">	
+						<% } else {%>
+							<img src="..\<%= follows[i].pathAvatar %>">
+						<% } %>
+					</div>
+					<div class = "wrapper-left-infor-recom">
+						<div class="wrapper-username">
+						<a href="/userpage/<%= follows[i].username %>">
+							<%= follows[i].username %>
+						</a>
+						</div>
+						<div class="usersub">	
+							<%= follows[i].describe %>
+						</div>
+					</div>
+				</div>
+			<% } %>
+	</div>
+		
+	<div>	
+		<% if(users.photos.length >9){
+			number = 9;
+		}else{
+	 		number = users.photos.length;
+		}
+		for(var i = 0; i < number ; i++) { %>
+			<button  class = "deletePhoto"data-id = <%= users.photos[i]._id %> data-path = <%= users.photos[i].pathPhoto %>> Delete</button>
+			<img src="..\<%= users.photos[i].pathPhoto %>">
+		<% } %>
+	</div>
+	<br>
+
+	<form enctype="multipart/form-data" method="POST" id = "adds">
+		<input type="text" name="text" placeholder="Do you want to add a post?" id = "textPost">
+		<label class = fileContainer>
+			<span class="glyphicon glyphicon-camera" aria-hidden="true"></span>
+			<span id = "chosen"></span>
+			<input type="file" name="uploadFileP" id = "filea">
+		</label>
+		<button type = "submit">
+			<span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+		</button>
+	</form>
+	<div id="wrapper-posts">
+		<% for(var i = 0; i < posts.length; i++){ %>
+			<div class = "wrapper-post">
+				<div class="block-wrapper-content">
+					<div class="wrapper-img-post">
+						<% if(!path){%>
+							<img src="../uploads/noavatar.jpg">	
+						<% } else {%>
+							<img src="../<%= path %>">
+						<% } %>
+					</div>
+					<div data-id = "<%= posts[i]._id %>" class = "deletePost"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
+					<div class="author"><a href="/userpage/<%= posts[i].user_id %>"><%= posts[i].user_id %></a></div>
+					<div class="data-block-comment">
+						<%= posts[i].date %>
+					</div>
+					<div class = "text-post">
+						<%= posts[i].text %>
+					</div>
+					<% if( posts[i].picture){%>
+						<div class = "post-img-content">
+							<img src="../<%= posts[i].picture %>">
+						</div>
+					<%}%>
+					<div post-id = "<%= posts[i]._id %>" class = "likesPost">
+						<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+						<%= posts[i].likes %>
+					</div>
+
+					<div class="wrapper-comment-form">
+						<input type="text" id="comment" placeholder="Comment">
+						<button id = "SernComment" post-id = <%= posts[i]._id %>><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></button>
+					</div>
+				</div>
+				<% for(var j = 0; j < posts[i].comments.length; j++){ %>
+					<div class = "wrapper-comment">
+						<div comment-id= "<%= posts[i].comments[j]._id %>" post-id = "<%= posts[i]._id %>" class = "delete">
+							<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+						</div>
+						<div class = "author">
+							<a href="/userpage/<%= posts[i].comments[j].user_id_who_comment %>"><%= posts[i].comments[j].user_id_who_comment %></a>
+						</div>
+						<div class = "data-block-comment"><%= posts[i].comments[j].dataC %></div>
+						<div class = "text-comment-wrapper"><%= posts[i].comments[j].textComment %></div>
+						<div comment-id= "<%= posts[i].comments[j]._id %>" post-id = "<%= posts[i]._id %>" class = "likes">
+							<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+							<%= posts[i].comments[j].likes %>
+						</div>
+					</div>
+				<% } %>
+			</div>
+		<% } %>
+		<% if(boll){ %>
+			<div id = "loadMore">Load more</div>
+		<% } %>
+	</div>
+		<div style= "display:none" id = "template">
+			<div class = "wrapper-post" >
+				<div class = "text-post"></div>
+				<div data-id = "" class = "deletePost">Delete</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">News</h4>
+				</div>
+				<div class="modal-body">
+					<div id="dialogWrapper">
+						<div id = "templateDialog" style = "display:none">
+							<div>
+								<img src="" avatar>
+								<a href = "" lastMessege></a>
+								<div textMsg></div>
+								<div dateMsg></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modelSearch" tabindex="-1" role="dialog" aria-labelledby="modelSearch">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modelSearch">Search</h4>
+				</div>
+				<div class="modal-body">
+					Hello World
+					<div id="searchWrapper"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal fade" id="modalViewAll" tabindex="-1" role="dialog" aria-labelledby="modalViewAll">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="modalViewAll">You Follow</h4>
+				</div>
+				<div class="modal-body" id = "block-content-follow">
+					<div id="searchWrapper"></div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id = "templateSearch" style = "display:none">
+		<div>
+			<img src="" avatar>
+			<a href = "" user></a>
+			<div textMsg></div>
+		</div>
+	</div>
+	<div class="modal fade" id="myModalNews" tabindex="-1" role="new" aria-labelledby="myModalLabel">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+					<h4 class="modal-title" id="myModalLabel">News</h4>
+				</div>
+				<div class="modal-body">
+					<ul class="nav nav-tabs" role="tablist">
+						<li role="presentation" class="active"><a href="#comments" aria-controls="comments" role="tab" data-toggle="tab">Comments</a></li>
+						<li role="presentation"><a href="#likes" aria-controls="likes" role="tab" data-toggle="tab">Likes</a></li>
+						<li role="presentation"><a href="#posts" aria-controls="posts" role="tab" data-toggle="tab">Posts</a></li>
+					</ul>
+					<div id="templateNewsWrapper">
+						<div>	
+							<div class="img-wrapper-news" img-wrapper-news>
+								<img src="" alt="" img-href >
+							</div>
+							<div class="username-wapper-news" username-wapper-news>
+								<a href="" a-href></a>
+							</div>
+							<div class="date-wrapper-news" date-wrapper-news></div>
+							<div class="text-wrapper-text" text-wrapper-text></div>
+						</div>	
+					</div>
+					<div class="tab-content">
+						<div role="tabpanel" class="tab-pane active" id="comments">
+							<div id="wrapperNewsComments"></div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="likes">
+							<div id="wrapperNewsLikes">	</div>
+						</div>
+						<div role="tabpanel" class="tab-pane" id="posts">
+							<div id="wrapperNewsPosts">	</div>
+						</div>
+					</div>
+					<div id="templateComments" style = "display:none">
+						<div class="wrapper-comment">
+							<div comment-id post-id class="delete">
+								<span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+							</div>
+							<div class="author"><a href></a></div>
+							<div class="data-block-comment"></div>
+							<div class="text-comment-wrapper"></div>
+							<div comment-id post-id class="likes">
+								<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+							</div>
+						</div>
+					</div>
+					<div id="templateLoadPost" style = "display:none">
+						<div class="wrapper-post">
+							<div class="block-wrapper-content">
+								<div class="wrapper-img-post">
+								<img img-post-load>
+							</div>
+							<div data-id class="deletePost"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></div>
+								<div class="author"><a href=""></a></div>
+								<div class="data-block-comment"></div>
+								<div class="text-post"></div>
+								<div class="post-img-content">
+									<img src="">
+								</div>
+								<div post-id class="likesPost">
+									<span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
+									0
+								</div>
+								<div class="wrapper-comment-form">
+									<input type="text" id="comment" placeholder="Comment">
+									<button id="SernComment" post-id><span class="glyphicon glyphicon-paperclip" aria-hidden="true"></span></button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="followtemplate" style = "display:none">
+						<div class="wrapper-recom-item">
+							<div class="wrapper-img-btn">
+								<img>
+							</div>
+							<div class="wrapper-left-infor-recom">
+								<div class="wrapper-username">
+									<a href="/userpage/sergey1"></a>
+								</div>
+								<div class="usersub"></div>
+							</div>
+						</div>
+					</div>
+
+					<div id="NewsWrapper">
+						<div id = "templateNews" style = "display:none">
+							<div>
+								<img src="" avatar>
+								<a href = "" lastMessege></a>
+								<div textMsg></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script src="../socket.io.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<script src="../client.js"></script>
+	<script src = "./newsClient.js"></script>
+</body>
+</html>
